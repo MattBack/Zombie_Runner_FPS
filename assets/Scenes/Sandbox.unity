@@ -121,6 +121,28 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: 47d30d54afae5cd4fb52a795c8cc1b16, type: 2}
+--- !u!1 &251998827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7697809519086599049, guid: c6453f8e1f814744d8b94e5a6d1f9942,
+    type: 3}
+  m_PrefabInstance: {fileID: 1617945891}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &251998828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251998827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b22295685f64124a8d4292f6e0eb7f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FPCamera: {fileID: 353260197}
+  range: 100
+  damage: 30
+  muzzleFlash: {fileID: 1617945893}
 --- !u!1001 &254744534
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -397,6 +419,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 04a24b5e91096bd4e8ae6fba35c4dbf8,
     type: 3}
   m_PrefabInstance: {fileID: 322065467}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &353260197 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2000000, guid: c6453f8e1f814744d8b94e5a6d1f9942,
+    type: 3}
+  m_PrefabInstance: {fileID: 1617945891}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &433215404 stripped
 GameObject:
@@ -2112,11 +2140,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4972954095481953933, guid: c6453f8e1f814744d8b94e5a6d1f9942,
+        type: 3}
+      propertyPath: UVModule.flipV
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
 --- !u!4 &1617945892 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400002, guid: c6453f8e1f814744d8b94e5a6d1f9942,
+    type: 3}
+  m_PrefabInstance: {fileID: 1617945891}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &1617945893 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4972954095481953941, guid: c6453f8e1f814744d8b94e5a6d1f9942,
     type: 3}
   m_PrefabInstance: {fileID: 1617945891}
   m_PrefabAsset: {fileID: 0}
@@ -2690,11 +2729,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5219233046525047589, guid: 868f4d5ae94fa444da3f96fb22847c5c,
-        type: 3}
-      propertyPath: m_StoppingDistance
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5219233046525047590, guid: 868f4d5ae94fa444da3f96fb22847c5c,
         type: 3}

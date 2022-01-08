@@ -62,7 +62,39 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\ImagePostEffects\Mobile\FPS_MobileBloom.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\Demo\FPSDemoGUI.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\Demo\FPSDemoReactivator.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\Demo\FPSFireManager.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\Demo\FPS_MouseLook.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\Demo\FPS_RigidbodyFirstPersonController.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\FPSLightCurves.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\FPSParticleSystemScaler.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\FPSRandomRotateAngle.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\FPSShaderColorGradient.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\FPSShaderFloatCurves.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\FPS_Decal.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\MaterialType.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\Rendering\FPS_CustomLight.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\Rendering\FPS_LWRP_RenderDistortion.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\Rendering\FPS_RenderDistortionOnLWRP.cs" />
+    <Compile Include="Assets\KriptoFX\MuzzleFlashes\Scripts\Rendering\FPS_UseLight.cs" />
     <Compile Include="Assets\Scripts\EnemyAI.cs" />
+    <Compile Include="Assets\Scripts\EnemyHealth.cs" />
+    <Compile Include="Assets\Scripts\Weapon.cs" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\Shaders\FPSLazer.shader" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\Shaders\Particles.shader" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\Shaders\Rocks.shader" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\Shaders\FPS_UberDecal.shader" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\ImagePostEffects\Mobile\Resources\FPS_Bloom_Inc.cginc" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\Shaders\AlphaBlendedAnim.shader" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\Shaders\FPSGlowAdditive.shader" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\Shaders\FPSDistortionGlass.shader" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\Readme.txt" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\Shaders\FPSDistortionParticles.shader" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\Shaders\FPSDistortionWaterParticles.shader" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\ImagePostEffects\Mobile\Resources\FPS_Bloom.shader" />
+    <None Include="Assets\KriptoFX\MuzzleFlashes\Shaders\Leafs.shader" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.16f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
