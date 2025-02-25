@@ -1,4 +1,4 @@
-# My Unity Game
+# Deathward FPS game
 
 ## Description
 A local co-op FPS zombie survival game built in Unity.
