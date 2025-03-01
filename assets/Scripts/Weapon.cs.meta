@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 5b22295685f64124a8d4292f6e0eb7f2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - FPCamera: {instanceID: 0}
+  - muzzleFlash: {instanceID: 0}
+  - hitEffect: {instanceID: 0}
+  - ammoSlot: {instanceID: 0}
+  - ammoText: {instanceID: 0}
+  - gunShot: {fileID: 8300000, guid: d79bebc90492a44499144f0e882d7a8d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

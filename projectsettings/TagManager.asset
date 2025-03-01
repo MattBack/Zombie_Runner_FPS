@@ -3,7 +3,17 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Foliage
+  - Fire
+  - Terrain
+  - Ground
+  - Door
+  - Wood
+  - Dirt
+  - Water
+  - SpawnPoint
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -13,10 +23,10 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Post-Processing
+  - UICamera
+  - Weapon
+  - Weapon-Post-Processing
   - 
   - 
   - 
