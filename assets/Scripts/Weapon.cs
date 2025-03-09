@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -37,7 +36,8 @@ public class Weapon : MonoBehaviour
     [SerializeField] AmmoType ammoType;
     [SerializeField] float timeBetweenShots = 0.5f;
     [SerializeField] TextMeshProUGUI ammoText;
-    
+    [SerializeField] TextMeshProUGUI reloadMessageText;
+
     [Header("Gun SFX")]
     [SerializeField] float reloadSfxDelay = 0.5f;
     [SerializeField] float shellsFallingDelay = 0.3f;
@@ -105,6 +105,7 @@ public class Weapon : MonoBehaviour
         ImpactElementHandler = FindObjectOfType<ImpactElementHandler>();
         weaponAnimator = animatorWeaponRef.GetComponent<Animator>();
         SetIdleAnimation();
+        //HideReloadText();
     }
 
     private void OnEnable()
@@ -183,12 +184,20 @@ public class Weapon : MonoBehaviour
     {
         DisplayAmmo();
 
+        if (currentClipAmmo <= 0)
+        {
+            ShowReloadText();
+        }
+        else if (currentClipAmmo > 0)
+        {
+            HideReloadText();
+        }
+
         if (Input.GetKeyDown(KeyCode.V) && !isAttacking)
         {
             StartCoroutine(PerformMeleeAttack());
             // trigger sound;
         }
-
 
         if(Input.GetKeyDown(KeyCode.R))
         {
@@ -364,6 +373,16 @@ public class Weapon : MonoBehaviour
     {
         int ammoInReserve = ammoSlot.GetCurrentAmmo(ammoType);
         ammoText.text = $"{currentClipAmmo}/{ammoInReserve}";
+    }
+
+    public void ShowReloadText()
+    {
+        reloadMessageText.enabled = true;
+    }
+
+    public void HideReloadText()
+    {
+        reloadMessageText.enabled = false;
     }
 
 
