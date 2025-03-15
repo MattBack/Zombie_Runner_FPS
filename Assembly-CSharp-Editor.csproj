@@ -735,6 +735,9 @@
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>Library\ScriptAssemblies\UnityEditor.TestRunner.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.MemoryProfiler">
+      <HintPath>Library\ScriptAssemblies\Unity.MemoryProfiler.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
     </Reference>
@@ -755,6 +758,9 @@
     </Reference>
     <Reference Include="Unity.Burst.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Burst.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.MemoryProfiler.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.MemoryProfiler.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ProBuilder">
       <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.dll</HintPath>
@@ -780,6 +786,9 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.EditorCoroutines.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.EditorCoroutines.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Animation.Rigging">
       <HintPath>Library\ScriptAssemblies\Unity.Animation.Rigging.dll</HintPath>
     </Reference>
@@ -800,6 +809,9 @@
     </Reference>
     <Reference Include="Unity.Mathematics.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Mathematics.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.MemoryProfiler.Editor.MemoryProfilerModule">
+      <HintPath>Library\ScriptAssemblies\Unity.MemoryProfiler.Editor.MemoryProfilerModule.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ProGrids">
       <HintPath>Library\ScriptAssemblies\Unity.ProGrids.dll</HintPath>

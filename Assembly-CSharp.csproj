@@ -53,7 +53,6 @@
     <UnityVersion>2020.3.47f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Asset Packs\StudioNewPunch\StudioNewPunch\UrbanZombie\Scripts\UrbanZombie_Custom_Instantiate.cs" />
     <Compile Include="Assets\Scripts\WeaponPickup.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\Realistic Effects Pack 3\Effects\Common\RenderTextureUtility.cs" />
     <Compile Include="Assets\Scripts\PlayOnClickSound.cs" />
@@ -75,7 +74,6 @@
     <Compile Include="Assets\Scripts\WeaponSwitcher.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\Utility\PlatformSpecificContent.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\CrossPlatformInput\Scripts\VirtualInput.cs" />
-    <Compile Include="Assets\Asset Packs\Aura 2\Examples\Sources\Scripts\SinRotationOffset.cs" />
     <Compile Include="Assets\Asset Packs\StudioNewPunch\StudioNewPunch\BigZombie\Scripts\BZ_CharCustomize.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\Cameras\Scripts\ProtectCameraFromWallClip.cs" />
     <Compile Include="Assets\Scripts\EnemyAttack.cs" />
@@ -189,9 +187,7 @@
     <Compile Include="Assets\Asset Packs\KriptoFX\Realistic Effects Pack 3\Scripts\Prefabs\Buffs\DebuffOnEnemyFromCollision.cs" />
     <Compile Include="Assets\Scripts\WeaponZoom.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\Realistic Effects Pack 3\Scripts\Prefabs\Shots\LineRendererBehaviour.cs" />
-    <Compile Include="Assets\Asset Packs\Aura 2\Examples\Sources\Scripts\DebugFps.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\Utility\FPSCounter.cs" />
-    <Compile Include="Assets\Asset Packs\Aura 2\Examples\Sources\Scripts\LightFlicker.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\Realistic Effects Pack 3\Scripts\Share\FadeInOutShaderColor.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\Realistic Effects Pack 3\Scripts\Prefabs\Buffs\ShieldCollisionBehaviour.cs" />
     <Compile Include="Assets\Scripts\TargetIndicator.cs" />
@@ -209,7 +205,6 @@
     <Compile Include="Assets\Asset Packs\Ian&apos;s Fire Pack Universal\Scripts\LightFlicker.cs" />
     <Compile Include="Assets\Scripts\Ammo.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\Cameras\Scripts\TargetFieldOfView.cs" />
-    <Compile Include="Assets\Asset Packs\Aura 2\Examples\Sources\Scripts\AutoMoveAndRotate.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\Utility\SimpleMouseRotator.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\MeshEffect\Scripts\ME_MeshMaterialEffect.cs" />
     <Compile Include="Assets\Scripts\WinLevel.cs" />
@@ -241,7 +236,6 @@
     <Compile Include="Assets\Asset Packs\KriptoFX\MeshEffect\Scripts\ME_ParticleGravityPoint.cs" />
     <Compile Include="Assets\Scripts\EnemyRandomCustomise.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\MuzzleFlashes\Scripts\Rendering\FPS_CustomLight.cs" />
-    <Compile Include="Assets\Asset Packs\Aura 2\Examples\Sources\Scripts\MoveSinCos.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\Realistic Effects Pack 3\Scripts\Share\EffectsColorizer.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\MeshEffect\Scripts\PSMeshRendererUpdater.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\Characters\RollerBall\Scripts\Ball.cs" />
@@ -291,7 +285,6 @@
     <Compile Include="Assets\Asset Packs\Standard Assets\Utility\ObjectResetter.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\Utility\AutoMobileShaderSwitch.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\Characters\ThirdPersonCharacter\Scripts\AICharacterControl.cs" />
-    <Compile Include="Assets\Asset Packs\Aura 2\Examples\Sources\Scripts\AuraFreeCamera.cs" />
     <Compile Include="Assets\Scripts\pickupDrop.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\Utility\AlphaButtonClickMask.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\Realistic Effects Pack 3\Effects\Common\MinAttribute.cs" />
@@ -333,6 +326,7 @@
     <Compile Include="Assets\Asset Packs\KriptoFX\Realistic Effects Pack 3\Effects\Common\ImageEffectHelper.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\MeshEffect\DemoResources\Scripts\ME_MouseOrbit.cs" />
     <Compile Include="Assets\Scripts\DamageIndicator.cs" />
+    <Compile Include="Assets\Asset Packs\StudioNewPunch\StudioNewPunch\UrbanZombie\Scripts\UrbanZombie_Custom_Instantiate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Asset Packs\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
@@ -1174,6 +1168,9 @@
     <Reference Include="System.Xml.Serialization">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.47f1\Editor\Data\NetStandard\compat\2.0.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.MemoryProfiler">
+      <HintPath>Library\ScriptAssemblies\Unity.MemoryProfiler.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
     </Reference>
@@ -1194,6 +1191,9 @@
     </Reference>
     <Reference Include="Unity.Burst.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Burst.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.MemoryProfiler.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.MemoryProfiler.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ProBuilder">
       <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.dll</HintPath>
@@ -1219,6 +1219,9 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.EditorCoroutines.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.EditorCoroutines.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Animation.Rigging">
       <HintPath>Library\ScriptAssemblies\Unity.Animation.Rigging.dll</HintPath>
     </Reference>
@@ -1239,6 +1242,9 @@
     </Reference>
     <Reference Include="Unity.Mathematics.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Mathematics.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.MemoryProfiler.Editor.MemoryProfilerModule">
+      <HintPath>Library\ScriptAssemblies\Unity.MemoryProfiler.Editor.MemoryProfilerModule.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ProGrids">
       <HintPath>Library\ScriptAssemblies\Unity.ProGrids.dll</HintPath>
