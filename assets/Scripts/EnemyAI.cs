@@ -67,7 +67,8 @@ public class EnemyAI : MonoBehaviour
     {
         isProvoked = true;
         //zombieSfxSource.PlayOneShot(zombieTakeDamage);
-        Debug.Log("Damage taken on enemy");
+        GetComponent<Animator>().SetTrigger("Knock_Back");
+        //Debug.Log("Damage taken on enemy");
     }
 
     [SerializeField] float lastSoundPlayTime = 0f;

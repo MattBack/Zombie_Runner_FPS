@@ -83,6 +83,9 @@ public class WeaponZoom : MonoBehaviour
 
     private void ToggleZoomedInUI()
     {
+        if (zoomedInUICanvas == null)
+            return;
+
         if (!zoomedInToggle)
         {
             zoomedInUICanvas.enabled = false;

@@ -95,7 +95,9 @@ public class EnemyHealth : MonoBehaviour
         if (isDead) return;
         isDead = true;
         EnemyDeathSfx();
-        GetComponent<Animator>().SetBool("Die", true);
+        // Allow random death animation - Set up in Animator, currently 3: Die_1, Die_2, Die_3
+        int randomDeathAnimation = Random.Range(1, 4);
+        GetComponent<Animator>().SetBool("Die_" + randomDeathAnimation, true);
         GetComponent<CapsuleCollider>().enabled = false;
         GetComponent<AudioSource>().enabled = false;
         EnemySpawnManager.enemyCount--;

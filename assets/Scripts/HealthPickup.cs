@@ -7,6 +7,7 @@ public class HealthPickup : MonoBehaviour
     [SerializeField] float healthAmount = 10;
 
     PlayerHealth playerHealth;
+    [SerializeField] GameObject healthEffect;
 
     //private void Start()
     //{
@@ -25,9 +26,19 @@ public class HealthPickup : MonoBehaviour
             FindObjectOfType<PlayerHealth>().IncreaseHealth(healthAmount);
             FindObjectOfType<HealthBar>().IncreaseHealthSlider(healthAmount);
             FindObjectOfType<AudioManager>().Play("HealthPickupSfx");
+
+            if (healthEffect != null)
+            {
+                GameObject effectInstance = Instantiate(healthEffect, playerHealth.transform.position, Quaternion.identity);
+                //healthEffect.SetActive(true);
+                effectInstance.SetActive(true);
+
+                effectInstance.transform.SetParent(playerHealth.transform);
+                
+                healthEffect.transform.parent = null;
+            }
+
             Destroy(gameObject);
         }
     }
-
-
 }

@@ -15,30 +15,38 @@ public enum FireMode
 public class Weapon : MonoBehaviour
 {
     Transform cam;
-    // impact references
-    //public ImpactInfo[] ImpactElemets = new ImpactInfo[0];
     ImpactElementHandler ImpactElementHandler;
     private Animator weaponAnimator;
-    [Space]
-    public float BulletDistance = 100; // TODO: remove
-    public GameObject ImpactEffect;
+    
     // impact references end
-
+    [Header("Weapon Stats Config")]
     [SerializeField] String weaponName;
     [SerializeField] Camera FPCamera;
     [SerializeField] float range = 100f;
     [SerializeField] float damage = 30f;
-    //[SerializeField] GameObject muzzleFlash;
-    //[SerializeField] ParticleSystem muzzleFlash; // TODO: remove if not needed
-    [SerializeField] GameObject hitEffect;
-    [SerializeField] GameObject hitEffectBlood;
+    [Space]
     [SerializeField] Ammo ammoSlot;
     [SerializeField] AmmoType ammoType;
+    [Space]
     [SerializeField] float timeBetweenShots = 0.5f;
+
+    public FireMode fireMode;
+
+    [SerializeField] bool shotgun = false;
+    [SerializeField] int bulletsPerShot = 6;
+
+    [SerializeField] float inaccuracyDistance = 5f;
+
+    [Header("Weapon UI Config")]
     [SerializeField] TextMeshProUGUI ammoText;
     [SerializeField] TextMeshProUGUI reloadMessageText;
 
-    [Header("Gun SFX")]
+    [Space]
+    [SerializeField] GameObject hitEffect;
+    [SerializeField] GameObject hitEffectBlood;
+
+    [Header("Gun SFX Config")]
+    AudioManager audioManager;
     [SerializeField] float reloadSfxDelay = 0.5f;
     [SerializeField] float shellsFallingDelay = 0.3f;
     [SerializeField] AudioSource pistolSfx;
@@ -47,18 +55,13 @@ public class Weapon : MonoBehaviour
     public AudioClip thirdGunSfx;
     [SerializeField] AudioClip weaponClipEmptySfx;
 
-    AudioManager audioManager;
-
+    [Header("Weapon Muzzle Flash")]
     [SerializeField] GameObject currentWeaponMuzzleRef;
+    public GameObject MuzzleFlashEffect;
+
+    [Header("Weapon Anim Config")]
     [SerializeField] GameObject animatorWeaponRef;
     public GameObject ref_rightHand;
-
-    public FireMode fireMode;
-
-    [SerializeField] bool shotgun = false;
-    [SerializeField] int bulletsPerShot = 6;
-
-    [SerializeField] float inaccuracyDistance = 5f;
 
     // for minigun animation logic
     private bool isShooting = false;
@@ -82,18 +85,19 @@ public class Weapon : MonoBehaviour
     [SerializeField] int clipSize = 7;
     int currentClipAmmo;
 
-    [Header("Camera shake config")]
+    [Header("Camera Shake Config")]
     [SerializeField] float shakeDuration = 0.1f;
     [SerializeField] float shakeMagnitude = 0.2f;
 
-    
-    private Melee melee;
     [Header("Melee config")]
     [SerializeField] float meleeAttackDamage = 10f;
     [SerializeField] float meleeAttackDuration = 1f;
     public BoxCollider meleeCollider;
+    private Melee melee;
 
     private bool isAttacking = false;
+
+    private bool isWalking = false;
 
     private void Awake()
     {
@@ -112,6 +116,10 @@ public class Weapon : MonoBehaviour
     {
         canShoot = true;
         currentClipAmmo = Mathf.Min(clipSize, ammoSlot.GetCurrentAmmo(ammoType));
+        if (MuzzleFlashEffect != null)
+        {
+            MuzzleFlashEffect.SetActive(false);
+        }
     }
 
     // for melee attack
@@ -179,9 +187,10 @@ public class Weapon : MonoBehaviour
         isAttacking = false;
     }
 
-    // Input.GetButton - for rapid fire.
     void Update()
     {
+        isWalking = IsPlayerWalking();
+        weaponAnimator.SetBool("isWalking", isWalking);
         DisplayAmmo();
 
         if (currentClipAmmo <= 0)
@@ -230,7 +239,7 @@ public class Weapon : MonoBehaviour
         {
             if (Input.GetButton("Fire1") && canShoot && currentClipAmmo > 0)
             {
-                Debug.Log("Fire1 pressed");
+                //Debug.Log("Fire1 pressed");
 
                 if (!isShooting)
                 {
@@ -272,7 +281,7 @@ public class Weapon : MonoBehaviour
         {
             if (!pistolSfx.isPlaying) // Ensure no overlap
             {
-                Debug.Log("Play minigun empty Sound Clip");
+                //Debug.Log("Play minigun empty Sound Clip");
                 pistolSfx.PlayOneShot(weaponClipEmptySfx);
             }
         }
@@ -287,18 +296,18 @@ public class Weapon : MonoBehaviour
     IEnumerator WaitForStartShootAnimation()
     {
         float animLength = weaponAnimator.GetCurrentAnimatorStateInfo(0).length;
-        Debug.Log("AN_StartShoot length: " + animLength);
+        //Debug.Log("AN_StartShoot length: " + animLength);
         // Wait until the "AN_StartShoot" animation has finished
         yield return new WaitForSeconds(animLength);
 
         minigunCanStartShooting = true;
-        Debug.Log("AN_StartShoot completed, minigunCanStartShooting = " + minigunCanStartShooting);
+        //Debug.Log("AN_StartShoot completed, minigunCanStartShooting = " + minigunCanStartShooting);
     }
 
     IEnumerator WaitForEndShootAnimation()
     {
         float animLength = weaponAnimator.GetCurrentAnimatorStateInfo(0).length;
-        Debug.Log("AN_EndShoot length: " + animLength);
+        //Debug.Log("AN_EndShoot length: " + animLength);
         // Wait until the "AN_EndShoot" animation has finished
         yield return new WaitForSeconds(weaponAnimator.GetCurrentAnimatorStateInfo(0).length);
         
@@ -332,13 +341,13 @@ public class Weapon : MonoBehaviour
 
         if (currentClipAmmo <= 0)
         {
-            Debug.Log("Out of ammo!");
+            //Debug.Log("Out of ammo!");
             weaponAnimator.Play("AN_EndShoot");
             StartCoroutine(WaitForEndShootAnimation());
         }
         else if (!Input.GetButton("Fire1"))
         {
-            Debug.Log("Fire1 released!");
+            //Debug.Log("Fire1 released!");
             weaponAnimator.Play("AN_EndShoot");
             StartCoroutine(WaitForEndShootAnimation());
         }
@@ -346,7 +355,6 @@ public class Weapon : MonoBehaviour
     // minigun animation logic end
 
     // added to ImpactElementHandler 
-    // TODO: muzzle flash   *****************************************************
     [System.Serializable]
     public class ImpactInfo
     {
@@ -366,8 +374,6 @@ public class Weapon : MonoBehaviour
         }
         return null;
     }
-    // TODO: Muzzle flash end *******************************************************
-
 
     private void DisplayAmmo()
     {
@@ -385,6 +391,22 @@ public class Weapon : MonoBehaviour
         reloadMessageText.enabled = false;
     }
 
+    void PlayMuzzleFlash()
+    {
+        if (weaponName == "Minigun")
+        {
+            return;
+        }
+
+        if (MuzzleFlashEffect != null)
+        {
+            MuzzleFlashEffect.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("No Muzzle flash assigned to: " + weaponName);
+        }
+    }
 
     IEnumerator Shoot()
     {
@@ -394,6 +416,7 @@ public class Weapon : MonoBehaviour
         {
             if (shotgun)
             {
+                PlayMuzzleFlash();
                 PlayPistolSFX();
                 PlayImpactSfx();
                 currentClipAmmo--;
@@ -406,7 +429,7 @@ public class Weapon : MonoBehaviour
             }
             else
             {
-                // PlayMuzzleFlash(); // TODO: maybe remove if not needed
+                PlayMuzzleFlash(); // TODO: maybe remove if not needed
                 PlayPistolSFX();
                 PlayImpactSfx();
                 // Play impact sound depending on surface type
@@ -544,7 +567,7 @@ public class Weapon : MonoBehaviour
         }
 
         weaponAnimator.Play(recoilAnimation);
-        weaponAnimator.ResetTrigger(recoilAnimation);
+        //weaponAnimator.ResetTrigger(recoilAnimation); // incase we want to use state
         yield return new WaitForSeconds(timeBetweenShots);
         weaponAnimator.Play(idleAnimation);
         // Woking recoil using animation end
@@ -553,7 +576,6 @@ public class Weapon : MonoBehaviour
     void SetIdleAnimation()
     {
         Animator weaponAnimator = animatorWeaponRef.GetComponent<Animator>();
-
         // Set the appropriate idle animation based on the weapon
         if (weaponName == "SMG")
         {
@@ -567,7 +589,7 @@ public class Weapon : MonoBehaviour
         {
             weaponAnimator.Play("Shotgun_Idle");
         }
-        else if (weaponName == "Sniper_Rifle_Idle")
+        else if (weaponName == "Sniper_Rifle")
         {
             weaponAnimator.Play("Sniper_Rifle_Idle");
         }
@@ -595,13 +617,10 @@ public class Weapon : MonoBehaviour
         {
             Debug.Log($"No audio clip assigned to pistolSfx for {gameObject.name}");
         }
-        
-
         if (afterShotSfx != null)
         {
             StartCoroutine(playSecondGunSound());
         }
-        
     }
 
     IEnumerator playSecondGunSound()
@@ -624,14 +643,8 @@ public class Weapon : MonoBehaviour
     }
 
 
-
-    // TODO: remove original particle muzzle flash
-    //private void PlayMuzzleFlash()
-    //{
-    //   muzzleFlash.Play();
-    //}
-
-    private void PlayImpactSfx() {
+    private void PlayImpactSfx()
+    {
         audioManager.Play("BulletImpact");
     }
 
@@ -674,6 +687,22 @@ public class Weapon : MonoBehaviour
             try
             {
                 CreateHitImpact(hit);
+
+                if (hit.collider.CompareTag("EnemyHead"))
+                {
+                    Debug.Log("HEADSHOT!");
+
+                    EnemyHealth headTarget = hit.transform.GetComponentInParent<EnemyHealth>();
+
+                    if (headTarget != null)
+                    { 
+                        headTarget.TakeDamage(damage * 2); // Double damage for headshots
+                    }
+
+                    // Return so it doesn't process the regular body hit
+                    return;
+                }
+
                 //TODO: add some visual hit effects
                 EnemyHealth target = hit.transform.GetComponent<EnemyHealth>();
                 if (target == null) return;
@@ -728,14 +757,6 @@ public class Weapon : MonoBehaviour
             return;
         }
     }
-    
-    // TODO: is this needed?
-    //private void CreateHitBloodParticles(RaycastHit hit)
-    //{
-    //    GameObject impactBlood = Instantiate(hitEffectBlood, hit.point, Quaternion.LookRotation(hit.normal));
-    //    //TODO: Add destroy particle - Set impactBlood gameObject to the blood VFX from Asset store
-    //}
-
 
     private void CreateHitImpact(RaycastHit hit)
     {
@@ -749,7 +770,7 @@ public class Weapon : MonoBehaviour
 
         Vector3 muzzleTransform = currentWeaponMuzzleRef.transform.position; // Position of where to instantiate the muzzle flash from
 
-        var impactEffectIstance = Instantiate(ImpactEffect, muzzleTransform, transform.rotation) as GameObject;
+        var impactEffectIstance = Instantiate(MuzzleFlashEffect, muzzleTransform, transform.rotation) as GameObject;
 
         audioManager.Play("BulletHitDirt"); // TODO: change sound based on material
 
@@ -758,17 +779,6 @@ public class Weapon : MonoBehaviour
         GameObject impact = Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
         Destroy(impact, 0.1f);
     }
-
-    //private Vector3 GetShootingDirection()
-    //{
-    //    Vector3 shakeOffset = new Vector3(
-    //        Random.Range(-inaccuracyDistance, inaccuracyDistance) * 0.01f,
-    //        Random.Range(-inaccuracyDistance, inaccuracyDistance) * 0.01f,
-    //        0
-    //    );
-
-    //    return FPCamera.transform.forward + shakeOffset;
-    //}
 
     Vector3 GetShootingDirection()
     {
@@ -781,6 +791,15 @@ public class Weapon : MonoBehaviour
 
         Vector3 direction = targetPos - cam.position;
         return direction.normalized;
+    }
 
+    // walking animations fo guns
+
+    private bool IsPlayerWalking()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        return horizontal != 0 || vertical != 0;
     }
 }

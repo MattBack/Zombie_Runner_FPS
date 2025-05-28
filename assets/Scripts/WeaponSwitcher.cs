@@ -126,6 +126,6 @@ public class WeaponSwitcher : MonoBehaviour
         armIK.data.target = newTarget;
         rigBuilder.Build();
 
-        Debug.Log("IK target updated to: " + newTarget.name);
+        //Debug.Log("IK target updated to: " + newTarget.name);
     }
 }

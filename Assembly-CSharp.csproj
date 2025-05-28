@@ -119,6 +119,7 @@
     <Compile Include="Assets\Scripts\playSFX_Delete_This_Script.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\ParticleSystems\Scripts\SmokeParticles.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\CrossPlatformInput\Scripts\TiltInput.cs" />
+    <Compile Include="Assets\Scripts\playerCrouch.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\Realistic Effects Pack 3\Scripts\Share\Billboard.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\MuzzleFlashes\Scripts\FPSLightCurves.cs" />
     <Compile Include="Assets\Asset Packs\KriptoFX\MeshEffect\Scripts\ME_CustomLight.cs" />
