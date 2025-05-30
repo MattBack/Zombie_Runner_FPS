@@ -22,7 +22,7 @@ public class DisplayDamage : MonoBehaviour
 
     public void ShowDamageImpact()
     {
-        Debug.Log("SHOW DAMAGE");
+        //Debug.Log("SHOW DAMAGE");
         int randomIndex = UnityEngine.Random.Range(0, damageSprites.Length);
         damageImage.sprite = damageSprites[randomIndex];
 

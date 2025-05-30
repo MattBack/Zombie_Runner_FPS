@@ -116,7 +116,6 @@
     <Compile Include="Assets\Asset Packs\StudioNewPunch\StudioNewPunch\GiantZombie\Scripts\GiantZombie_Char_BodyParts_Instantiate.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\CrossPlatformInput\Scripts\Joystick.cs" />
     <Compile Include="Assets\Scripts\ScreenShot.cs" />
-    <Compile Include="Assets\Scripts\playSFX_Delete_This_Script.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\ParticleSystems\Scripts\SmokeParticles.cs" />
     <Compile Include="Assets\Asset Packs\Standard Assets\CrossPlatformInput\Scripts\TiltInput.cs" />
     <Compile Include="Assets\Scripts\playerCrouch.cs" />
