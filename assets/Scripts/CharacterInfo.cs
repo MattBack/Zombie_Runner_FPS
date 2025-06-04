@@ -12,5 +12,5 @@ public class CharacterInfo : ScriptableObject
 
     public Sprite characterPic;
 
-    //public GameObject charcterPrefab;
+    public GameObject charcterPrefab;
 }
