@@ -65,14 +65,49 @@ public class SceneLoader : MonoBehaviour
             return;
         }
 
-
         for (int i = 0; i < playerCount;  i++)
         {
-            //spawn Player_Prefab
             Transform playerSpawnPoint = PlayerSpawnPointsOnStart[i].transform;
             GameObject playerToSpawn = Instantiate(playerPrefab, playerSpawnPoint.position, playerSpawnPoint.rotation);
-
             Debug.Log($"Spawned player: {i}");
+
+            Camera playerCam = playerToSpawn.GetComponentInChildren<Camera>();
+            if (playerCam != null)
+            {
+                playerCam.rect = GetViewportRect(i, playerCount);
+            }
+        }
+
+        Rect GetViewportRect(int index, int totalPlayers)
+        {
+            switch (totalPlayers)
+            {
+                case 1:
+                    return new Rect(0f, 0f, 1f, 1f);
+
+                case 2:
+                    return index == 0
+                        ? new Rect(0f, 0.5f, 1f, 0.5f)   // Top half
+                        : new Rect(0f, 0f, 1f, 0.5f);    // Bottom half
+
+                case 3:
+                    if (index == 0) return new Rect(0f, 0.5f, 0.5f, 0.5f);  // Top-left
+                    if (index == 1) return new Rect(0.5f, 0.5f, 0.5f, 0.5f); // Top-right
+                    return new Rect(0.25f, 0f, 0.5f, 0.5f);                 // Bottom-center
+
+                case 4:
+                    switch (index)
+                    {
+                        case 0: return new Rect(0f, 0.5f, 0.5f, 0.5f);  // Top-left
+                        case 1: return new Rect(0.5f, 0.5f, 0.5f, 0.5f); // Top-right
+                        case 2: return new Rect(0f, 0f, 0.5f, 0.5f);     // Bottom-left
+                        case 3: return new Rect(0.5f, 0f, 0.5f, 0.5f);    // Bottom-right
+                    }
+                    break;
+            }
+
+            // Default fallback
+            return new Rect(0f, 0f, 1f, 1f);
         }
     }
 
@@ -81,5 +116,7 @@ public class SceneLoader : MonoBehaviour
         yield return null;
         SpawnCharacters();
     }
+
+
 
 }
