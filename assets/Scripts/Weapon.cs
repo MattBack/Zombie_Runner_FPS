@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 public enum FireMode
@@ -185,6 +186,14 @@ public class Weapon : MonoBehaviour
         meleeCollider.enabled = false;
 
         isAttacking = false;
+    }
+
+    public void OnFire(InputAction.CallbackContext context)
+    {
+        if (context.performed && canShoot)
+        {
+            StartCoroutine(Shoot());
+        }
     }
 
     void Update()

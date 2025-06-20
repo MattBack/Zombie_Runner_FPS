@@ -22,7 +22,7 @@ public class PlayerHealth : MonoBehaviour
     private Outline outline;
     private Coroutine glowCoroutine;
     private bool isGlowing = false;
-
+     
     private void Awake()
     {
         audioManager = FindObjectOfType<AudioManager>();

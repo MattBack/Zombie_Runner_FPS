@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -12,6 +13,39 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] GameObject optionsMenuUI;
     [SerializeField] GameObject controlsMenuUI;
     [SerializeField] GameObject audioMenuUI;
+
+    private PlayerInput playerInput;
+    private InputAction pauseAction;
+
+    private void Awake()
+    {
+        playerInput = GetComponent<PlayerInput>();
+        pauseAction = playerInput.actions["Pause"];
+    }
+
+    private void OnEnable()
+    {
+        pauseAction.performed += OnPausePressed;
+        pauseAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        pauseAction.performed -= OnPausePressed;
+        pauseAction.Disable();
+    }
+
+    private void OnPausePressed(InputAction.CallbackContext context)
+    {
+        if (GameIsPaused)
+        {
+            Resume();
+        }
+        else
+        {
+            Pause();
+        }
+    }
 
     void Update()
     {
