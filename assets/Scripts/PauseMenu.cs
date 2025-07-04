@@ -47,25 +47,6 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            if (GameIsPaused)
-            {
-                Resume();
-            }
-            else
-            {
-                
-                Pause();
-                Time.timeScale = 0f;
-            }
-        }
-
-    }
-
     public void Resume()
     {
         pauseMenuUI.SetActive(false);

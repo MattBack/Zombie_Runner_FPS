@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GrenadeThrower : MonoBehaviour
 {
@@ -16,6 +17,16 @@ public class GrenadeThrower : MonoBehaviour
 
     private int currentAmmo;
 
+    // Controls Mapping
+    private PlayerInput controls;
+    private InputAction throwGrenadeAction;
+
+    private void Awake()
+    {
+        controls = GetComponentInParent<PlayerInput>();
+        throwGrenadeAction = controls.actions["ThrowGrenade"];
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -26,20 +37,44 @@ public class GrenadeThrower : MonoBehaviour
         DisplayGrenadeAmmo();
 
         // Check input and ammo before throwing a grenade
-        if (Input.GetKeyDown(KeyCode.Q) && currentAmmo > 0)
+        //if (Input.GetKeyDown(KeyCode.Q) && currentAmmo > 0)
+        //{
+        //    OnThrowPressed();
+        //    ReduceGrenadeAmmo();
+        //}
+    }
+
+    public void OnThrowPressed(InputAction.CallbackContext context)
+    {
+        if (currentAmmo > 0)
         {
-            ThrowGrenade();
+            GameObject grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
+            Rigidbody rb = grenade.GetComponent<Rigidbody>();
+            rb.AddForce(transform.forward * throwForce);
             ReduceGrenadeAmmo();
+            // TODO: Add animation
         }
     }
 
-    void ThrowGrenade()
+    private void OnEnable()
     {
-        GameObject grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
-        Rigidbody rb = grenade.GetComponent<Rigidbody>();
-        rb.AddForce(transform.forward * throwForce);
-        // TODO: Add animation
+        throwGrenadeAction.performed += OnThrowPressed;
+        throwGrenadeAction.Enable();
     }
+
+    private void OnDisable()
+    {
+        throwGrenadeAction.performed -= OnThrowPressed;
+        throwGrenadeAction.Disable();
+    }
+
+    //void ThrowGrenade()
+    //{
+    //    GameObject grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
+    //    Rigidbody rb = grenade.GetComponent<Rigidbody>();
+    //    rb.AddForce(transform.forward * throwForce);
+    //    // TODO: Add animation
+    //}
 
     private void DisplayGrenadeAmmo()
     {

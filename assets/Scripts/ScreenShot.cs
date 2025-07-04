@@ -1,16 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ScreenShot : MonoBehaviour
 {
-    //public KeyCode screenShotButton;
-    private void Update()
+    private PlayerInput playerInput;
+    private InputAction screenshotAction;
+
+    private void Awake()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
+        playerInput = GetComponent<PlayerInput>();
+        screenshotAction = playerInput.actions["TakeScreenshot"];
+    }
+
+    ////public KeyCode screenShotButton;
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.T))
+    //    {
+            
+    //    }
+    //}
+
+    private void OnEnable()
+    {
+        screenshotAction.performed += OnScreenshotPressed;
+        screenshotAction.Enable();
+    }
+
+    private void OnDisable ()
+    {
+        screenshotAction.performed -= OnScreenshotPressed;
+        screenshotAction.Enable();
+    }
+
+    public void OnScreenshotPressed(InputAction.CallbackContext context)
+    {
             ScreenCapture.CaptureScreenshot("screenshot.png");
             Debug.Log("A screenshot was taken!");
-        }
     }
 }

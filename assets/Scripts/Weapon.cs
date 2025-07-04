@@ -100,9 +100,18 @@ public class Weapon : MonoBehaviour
 
     private bool isWalking = false;
 
+    private PlayerInput playerInput;
+    private InputAction moveAction;
+    private InputAction reloadAction;
+
     private void Awake()
     {
         cam = FPCamera.transform;
+
+        playerInput = GetComponentInParent<PlayerInput>();
+        moveAction = playerInput.actions["Move"];
+        reloadAction = playerInput.actions["Reload"];
+
         audioManager = FindObjectOfType<AudioManager>();
         BloodHandler = FindObjectOfType<BloodHandler>();
         //melee = FindObjectOfType<Melee>();
@@ -120,6 +129,23 @@ public class Weapon : MonoBehaviour
         if (MuzzleFlashEffect != null)
         {
             MuzzleFlashEffect.SetActive(false);
+        }
+
+        reloadAction.performed += OnReloadPressed;
+        reloadAction.Enable();
+    }
+
+      private void OnDisable()
+    {
+        reloadAction.performed -= OnReloadPressed;
+        reloadAction.Disable();
+    }
+
+    public void OnReloadPressed(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Reload();
         }
     }
 
@@ -217,10 +243,10 @@ public class Weapon : MonoBehaviour
             // trigger sound;
         }
 
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            Reload();
-        }
+        //if(Input.GetKeyDown(KeyCode.R))
+        //{
+        //    Reload();
+        //}
 
         if (fireMode == FireMode.Continuous)
         {
@@ -802,13 +828,11 @@ public class Weapon : MonoBehaviour
         return direction.normalized;
     }
 
-    // walking animations fo guns
-
+    // walking animations for weapons 
     private bool IsPlayerWalking()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        Vector2 movement = moveAction.ReadValue<Vector2>();
 
-        return horizontal != 0 || vertical != 0;
+        return movement.x != 0 || movement.y != 0;
     }
 }

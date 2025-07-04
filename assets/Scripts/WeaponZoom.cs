@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class WeaponZoom : MonoBehaviour
 {
@@ -22,11 +23,21 @@ public class WeaponZoom : MonoBehaviour
 
     bool zoomedInToggle = false;
 
+    private PlayerInput playerInput;
+    private InputAction zoomAction;
+
+    private void Awake()
+    {
+        playerInput = GetComponent<PlayerInput>();
+        zoomAction = playerInput.actions["Zoom"];
+    }
 
     private void Start()
     {
         ToggleZoomedInUI();
     }
+
+
 
     private void Update()
     {
@@ -36,24 +47,46 @@ public class WeaponZoom : MonoBehaviour
 
 
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            FindObjectOfType<AudioManager>().Play("WeaponZoomSfx");
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    //FindObjectOfType<AudioManager>().Play("WeaponZoomSfx");
 
-            if (zoomedInToggle == false)
-            {
-                ZoomIn();
-            }
-            else
-            {
-                ZoomOut();
-            }
+        //    //if (zoomedInToggle == false)
+        //    //{
+        //    //    ZoomIn();
+        //    //}
+        //    //else
+        //    //{
+        //    //    ZoomOut();
+        //    //}
+        //}
+    }
+
+    public void OnZoomPressed(InputAction.CallbackContext context)
+    {
+        FindObjectOfType<AudioManager>().Play("WeaponZoomSfx");
+
+        if (zoomedInToggle == false)
+        {
+            ZoomIn();
         }
+        else
+        {
+            ZoomOut();
+        }
+    }
+
+    private void OnEnable()
+    {
+        zoomAction.performed += OnZoomPressed;
+        zoomAction.Enable();
     }
 
     private void OnDisable()
     {
         ZoomOut();
+        zoomAction.performed -= OnZoomPressed;
+        zoomAction.Disable();
     }
 
     private void ZoomOut()

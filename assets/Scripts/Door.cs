@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Door : MonoBehaviour
 {
@@ -16,17 +17,43 @@ public class Door : MonoBehaviour
     private Animator anim;
     private AudioSource audioSource;
 
+    private PlayerInput playerInput;
+    private InputAction playerInteractAction;
+
+    private void Awake()
+    {
+        playerInput = GetComponentInParent<PlayerInput>();
+        playerInteractAction = playerInput.actions["PlayerInteract"];
+    }
+
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
     }
 
-    void Update()
+    //void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.E))
+    //    {
+    //        Pressed();
+    //    }
+    //}
+
+    private void OnEnable()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Pressed();
-        }
+        playerInteractAction.performed += OnPlayerInteract;
+        playerInteractAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        playerInteractAction.performed -= OnPlayerInteract;
+        playerInteractAction.Disable();
+    }
+
+    public void OnPlayerInteract(InputAction.CallbackContext context)
+    {
+         Pressed();
     }
 
     void playDoorCreak() {
