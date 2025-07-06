@@ -28,7 +28,7 @@ public class WeaponZoom : MonoBehaviour
 
     private void Awake()
     {
-        playerInput = GetComponent<PlayerInput>();
+        playerInput = GetComponentInParent<PlayerInput>();
         zoomAction = playerInput.actions["Zoom"];
     }
 

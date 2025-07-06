@@ -155,6 +155,12 @@ public class WeaponSwitcher : MonoBehaviour
         }
     }
 
+    public Weapon GetCurrentWeaponComponent()
+    {
+        if (currentWeapon < 0 || currentWeapon >= validWeapons.Count) return null;
+        return validWeapons[currentWeapon].GetComponent<Weapon>();
+    }
+
     private void PlayDrawWeaponAnim()
     {
         weaponAnimator.Play("weaponDrawAnim");

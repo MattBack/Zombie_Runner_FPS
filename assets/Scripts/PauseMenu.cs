@@ -19,8 +19,16 @@ public class PauseMenu : MonoBehaviour
 
     private void Awake()
     {
-        playerInput = GetComponent<PlayerInput>();
-        pauseAction = playerInput.actions["Pause"];
+        playerInput = FindObjectOfType<PlayerInput>();
+
+        if (playerInput != null)
+        {
+            pauseAction = playerInput.actions["Pause"];
+        }
+        else
+        {
+            Debug.LogError("PlayerInput not found in scene. Make sure a PlayerInput exists.");
+        }
     }
 
     private void OnEnable()

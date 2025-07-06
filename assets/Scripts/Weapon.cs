@@ -102,7 +102,6 @@ public class Weapon : MonoBehaviour
 
     private PlayerInput playerInput;
     private InputAction moveAction;
-    private InputAction reloadAction;
 
     private void Awake()
     {
@@ -110,7 +109,6 @@ public class Weapon : MonoBehaviour
 
         playerInput = GetComponentInParent<PlayerInput>();
         moveAction = playerInput.actions["Move"];
-        reloadAction = playerInput.actions["Reload"];
 
         audioManager = FindObjectOfType<AudioManager>();
         BloodHandler = FindObjectOfType<BloodHandler>();
@@ -131,21 +129,18 @@ public class Weapon : MonoBehaviour
             MuzzleFlashEffect.SetActive(false);
         }
 
-        reloadAction.performed += OnReloadPressed;
-        reloadAction.Enable();
     }
 
-      private void OnDisable()
+    public void OnReloadPressed()
     {
-        reloadAction.performed -= OnReloadPressed;
-        reloadAction.Disable();
+        Reload();
     }
 
-    public void OnReloadPressed(InputAction.CallbackContext context)
+    public void OnMeleePressed()
     {
-        if (context.performed)
+        if (!isAttacking)
         {
-            Reload();
+            StartCoroutine(PerformMeleeAttack());
         }
     }
 
@@ -214,13 +209,42 @@ public class Weapon : MonoBehaviour
         isAttacking = false;
     }
 
-    public void OnFire(InputAction.CallbackContext context)
+    public void OnFire()
     {
-        if (context.performed && canShoot)
-        {
-            StartCoroutine(Shoot());
-        }
+        if (!canShoot || currentClipAmmo <= 0) return;
+
+ 
+            if (fireMode == FireMode.Single || fireMode == FireMode.Shotgun)
+            {
+                StartCoroutine(Shoot());
+            }
+            else if (fireMode == FireMode.Continuous || fireMode == FireMode.Minigun)
+            {
+                isShooting = true;
+                if (fireMode == FireMode.Minigun)
+                {
+                    weaponAnimator.Play("AN_StartShoot");
+                    StartCoroutine(WaitForStartShootAnimation());
+                }
+                else
+                {
+                    StartCoroutine(ShootContinuously());
+                }
+            }
+
+            if (fireMode == FireMode.Continuous)
+            {
+                isShooting = false;
+            }
+            else if (fireMode == FireMode.Minigun && isShooting)
+            {
+                isShooting = false;
+                weaponAnimator.Play("AN_EndShoot");
+                StartCoroutine(WaitForEndShootAnimation());
+            }
+        
     }
+
 
     void Update()
     {
@@ -232,83 +256,12 @@ public class Weapon : MonoBehaviour
         {
             ShowReloadText();
         }
-        else if (currentClipAmmo > 0)
+        else
         {
             HideReloadText();
         }
-
-        if (Input.GetKeyDown(KeyCode.V) && !isAttacking)
-        {
-            StartCoroutine(PerformMeleeAttack());
-            // trigger sound;
-        }
-
-        //if(Input.GetKeyDown(KeyCode.R))
-        //{
-        //    Reload();
-        //}
-
-        if (fireMode == FireMode.Continuous)
-        {
-            if (Input.GetButton("Fire1") && canShoot)
-            {
-                StartCoroutine(Shoot());
-            }
-        }
-        else if (fireMode == FireMode.Single)
-        {
-            if (Input.GetButtonDown("Fire1") && canShoot)
-            {
-                StartCoroutine(Shoot());
-            }
-        }
-        else if (fireMode == FireMode.Shotgun)
-        {
-            if (Input.GetButtonDown("Fire1") && canShoot)
-            {
-                shotgun = true;
-                StartCoroutine(Shoot());
-            }
-        }
-        else if (fireMode == FireMode.Minigun)
-        {
-            if (Input.GetButton("Fire1") && canShoot && currentClipAmmo > 0)
-            {
-                //Debug.Log("Fire1 pressed");
-
-                if (!isShooting)
-                {
-                    isShooting = true;
-                    minigunCanStartShooting = false;
-                    weaponAnimator.Play("AN_StartShoot");
-                    StartCoroutine(WaitForStartShootAnimation());
-                }
-
-                if (minigunCanStartShooting)
-                {
-                    if (!minigunIsFiring)
-                    {
-                        minigunIsFiring = true;
-                        weaponAnimator.Play("AN_Shooting");
-                        StartCoroutine(ShootContinuously());
-                    }
-                }
-            }
-            else if (isShooting)
-            {
-                isShooting = false;
-                minigunIsFiring = false;
-                weaponAnimator.Play("AN_EndShoot");
-                StartCoroutine(WaitForEndShootAnimation());
-            }
-            else if (Input.GetButton("Fire1") && canShoot && currentClipAmmo <= 0)
-            {
-                // If not ammo in clip then don't start the routines.
-                // Play SFX
-                PlayEmptyClip();
-            }
-        }
     }
+
 
     private void PlayEmptyClip()
     {
@@ -353,41 +306,25 @@ public class Weapon : MonoBehaviour
     // Continuous shooting coroutine
     IEnumerator ShootContinuously()
     {
-        while (Input.GetButton("Fire1") && currentClipAmmo > 0)
+        while (isShooting && currentClipAmmo > 0)
         {
-            // Ensure firing state is active
-            if (!minigunIsFiring)
-            {
-                minigunIsFiring = true;
-                weaponAnimator.Play("AN_Shooting");
-            }
-
             PlayPistolSFX();
             PlayImpactSfx();
-            ProcessRaycast();  // Simulate bullet hit
-            currentClipAmmo--;  // Decrease ammo
-            shakeOnShoot();  // Add camera shake effect
-
-            yield return new WaitForSeconds(timeBetweenShots);  // Delay between shots
+            ProcessRaycast();
+            currentClipAmmo--;
+            shakeOnShoot();
+            yield return new WaitForSeconds(timeBetweenShots);
         }
 
-        // Stop firing when ammo is depleted or Fire1 is released
-        minigunIsFiring = false;
+        isShooting = false;
 
-        if (currentClipAmmo <= 0)
+        if (fireMode == FireMode.Minigun)
         {
-            //Debug.Log("Out of ammo!");
-            weaponAnimator.Play("AN_EndShoot");
-            StartCoroutine(WaitForEndShootAnimation());
-        }
-        else if (!Input.GetButton("Fire1"))
-        {
-            //Debug.Log("Fire1 released!");
             weaponAnimator.Play("AN_EndShoot");
             StartCoroutine(WaitForEndShootAnimation());
         }
     }
-    // minigun animation logic end
+
 
     // added to ImpactElementHandler 
     [System.Serializable]

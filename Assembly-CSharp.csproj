@@ -330,6 +330,7 @@
     <Compile Include="Assets\Asset Packs\KriptoFX\MeshEffect\DemoResources\Scripts\ME_MouseOrbit.cs" />
     <Compile Include="Assets\Scripts\DamageIndicator.cs" />
     <Compile Include="Assets\Asset Packs\StudioNewPunch\StudioNewPunch\UrbanZombie\Scripts\UrbanZombie_Custom_Instantiate.cs" />
+    <Compile Include="Assets\WeaponInputManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Asset Packs\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
