@@ -17,6 +17,8 @@ public class PauseMenu : MonoBehaviour
     private PlayerInput playerInput;
     private InputAction pauseAction;
 
+    [SerializeField] private CursorManager cursorManager;
+
     private void Awake()
     {
         playerInput = FindObjectOfType<PlayerInput>();
@@ -63,6 +65,7 @@ public class PauseMenu : MonoBehaviour
         audioMenuUI.SetActive(false);
         Time.timeScale = 1f;
         GameIsPaused = false;
+        cursorManager.LockCursor();
     }
 
     public void Pause()

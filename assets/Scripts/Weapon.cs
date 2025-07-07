@@ -209,42 +209,41 @@ public class Weapon : MonoBehaviour
         isAttacking = false;
     }
 
-    public void OnFire()
+    public void OnFirePressed()
     {
-        if (!canShoot || currentClipAmmo <= 0) return;
+        if (fireMode == FireMode.Single || fireMode == FireMode.Shotgun)
+        {
+            StartCoroutine(Shoot());
+        }
+        else if (fireMode == FireMode.Continuous || fireMode == FireMode.Minigun)
+        {
+            isShooting = true;
 
- 
-            if (fireMode == FireMode.Single || fireMode == FireMode.Shotgun)
+            if (fireMode == FireMode.Minigun)
             {
-                StartCoroutine(Shoot());
+                weaponAnimator.Play("AN_StartShoot");
+                StartCoroutine(WaitForStartShootAnimation());
             }
-            else if (fireMode == FireMode.Continuous || fireMode == FireMode.Minigun)
+            else
             {
-                isShooting = true;
-                if (fireMode == FireMode.Minigun)
-                {
-                    weaponAnimator.Play("AN_StartShoot");
-                    StartCoroutine(WaitForStartShootAnimation());
-                }
-                else
-                {
-                    StartCoroutine(ShootContinuously());
-                }
+                StartCoroutine(ShootContinuously());
             }
-
-            if (fireMode == FireMode.Continuous)
-            {
-                isShooting = false;
-            }
-            else if (fireMode == FireMode.Minigun && isShooting)
-            {
-                isShooting = false;
-                weaponAnimator.Play("AN_EndShoot");
-                StartCoroutine(WaitForEndShootAnimation());
-            }
-        
+        }
     }
 
+    public void OnFireReleased()
+    {
+        if (fireMode == FireMode.Continuous)
+        {
+            isShooting = false;
+        }
+        else if (fireMode == FireMode.Minigun && isShooting)
+        {
+            isShooting = false;
+            weaponAnimator.Play("AN_EndShoot");
+            StartCoroutine(WaitForEndShootAnimation());
+        }
+    }
 
     void Update()
     {

@@ -331,6 +331,7 @@
     <Compile Include="Assets\Scripts\DamageIndicator.cs" />
     <Compile Include="Assets\Asset Packs\StudioNewPunch\StudioNewPunch\UrbanZombie\Scripts\UrbanZombie_Custom_Instantiate.cs" />
     <Compile Include="Assets\WeaponInputManager.cs" />
+    <Compile Include="Assets\CursorManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Asset Packs\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
