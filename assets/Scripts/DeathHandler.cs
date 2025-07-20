@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class DeathHandler : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class DeathHandler : MonoBehaviour
 
         // Disable player actions
         FindObjectOfType<WeaponSwitcher>().enabled = false;
-        FPS_RigidbodyFirstPersonController playerMovement = FindObjectOfType<FPS_RigidbodyFirstPersonController>();
+        RigidbodyFirstPersonController playerMovement = FindObjectOfType<RigidbodyFirstPersonController>();
         if (playerMovement != null)
         {
             playerMovement.enabled = false;

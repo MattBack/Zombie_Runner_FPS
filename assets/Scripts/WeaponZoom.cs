@@ -7,19 +7,16 @@ using UnityEngine.InputSystem;
 
 public class WeaponZoom : MonoBehaviour
 {
-    internal object disabled;
     [SerializeField] Camera fpsCamera;
     [SerializeField] RigidbodyFirstPersonController fpsController;
     [SerializeField] float zoomedOutFOV = 60f;
     [SerializeField] float zoomedInFOV = 20f;
-    [SerializeField] float zoomOutSensitivity = 2f;
-    [SerializeField] float zoomInSensitivity = .5f;
 
     [Header("Zoom Visuals")]
     [SerializeField] Canvas zoomedInUICanvas; // canvas to toggle on and off
-    [SerializeField] Image zoomedInUIImage; // image for the current weapon
+    [SerializeField] Image zoomedInUIImage;   // image for the current weapon
     [SerializeField] Sprite zoomedInUISprite;
-    [Range(0,1)] public float zoomedInTransparency = 0.5f;
+    [Range(0, 1)] public float zoomedInTransparency = 0.5f;
 
     bool zoomedInToggle = false;
 
@@ -37,29 +34,12 @@ public class WeaponZoom : MonoBehaviour
         ToggleZoomedInUI();
     }
 
-
-
     private void Update()
     {
+        // Update UI transparency
         Color zoomedImageColor = zoomedInUIImage.color;
         zoomedImageColor.a = zoomedInTransparency;
         zoomedInUIImage.color = zoomedImageColor;
-
-
-
-        //if (Input.GetMouseButtonDown(1))
-        //{
-        //    //FindObjectOfType<AudioManager>().Play("WeaponZoomSfx");
-
-        //    //if (zoomedInToggle == false)
-        //    //{
-        //    //    ZoomIn();
-        //    //}
-        //    //else
-        //    //{
-        //    //    ZoomOut();
-        //    //}
-        //}
     }
 
     public void OnZoomPressed(InputAction.CallbackContext context)
@@ -84,27 +64,29 @@ public class WeaponZoom : MonoBehaviour
 
     private void OnDisable()
     {
-        ZoomOut();
+        ZoomOut(); // Always reset zoom state on disable
         zoomAction.performed -= OnZoomPressed;
         zoomAction.Disable();
     }
 
-    private void ZoomOut()
+    public void ZoomOut()
     {
         zoomedInToggle = false;
         fpsCamera.fieldOfView = zoomedOutFOV;
-        fpsController.mouseLook.XSensitivity = zoomOutSensitivity;
-        fpsController.mouseLook.YSensitivity = zoomOutSensitivity;
+
+        // Reset sensitivity to normal
+        fpsController.mouseLook.ResetSensitivity();
 
         ToggleZoomedInUI();
     }
 
-    private void ZoomIn()
+    public void ZoomIn()
     {
         zoomedInToggle = true;
         fpsCamera.fieldOfView = zoomedInFOV;
-        fpsController.mouseLook.XSensitivity = zoomInSensitivity;
-        fpsController.mouseLook.YSensitivity = zoomInSensitivity;
+
+        // Switch to zoom sensitivity
+        fpsController.mouseLook.SetZoomSensitivity();
 
         ToggleZoomedInUI();
     }
