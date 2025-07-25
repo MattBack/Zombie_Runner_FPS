@@ -8,5 +8,5 @@ public class MouseLookSettings : ScriptableObject
     public float zoomedYSensitivity = 0.15f;
     public bool smooth = true;
     public float smoothTime = 7f;
-
+    public float controllerLookSensitivity = 2.0f;
 }

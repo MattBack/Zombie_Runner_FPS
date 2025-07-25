@@ -1,8 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class MainMenu : MonoBehaviour
 {
@@ -23,8 +23,17 @@ public class MainMenu : MonoBehaviour
     private int chosenLevel;
 
     [SerializeField] AudioClip buttonClick;
-    
+
     AudioSource audioSource;
+
+    [Header("First Selected Buttons")]
+    public GameObject mainMenuFirstButton;
+    public GameObject optionsMenuFirstButton;
+    public GameObject playerCountFirstButton;
+    public GameObject characterSelectFirstButton;
+    public GameObject levelSelectFirstButton;
+    public GameObject audioMenuFirstButton;
+    public GameObject controlsMenuFirstButton;
 
     void Start()
     {
@@ -33,14 +42,17 @@ public class MainMenu : MonoBehaviour
         Cursor.visible = true;
     }
 
-    public void LoadScene(int sceneId) {
+    public void LoadScene(int sceneId)
+    {
         StartCoroutine(LoadSceneAsync(sceneId));
     }
 
-    IEnumerator LoadSceneAsync(int sceneId) {
+    IEnumerator LoadSceneAsync(int sceneId)
+    {
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneId);
 
-        while (!operation.isDone) {
+        while (!operation.isDone)
+        {
             float progressValue = Mathf.Clamp01(operation.progress / 0.9f);
 
             LoadingScreen.SetActive(true);
@@ -51,46 +63,59 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    public void StartGame() {
+    public void StartGame()
+    {
         chosenLevel = (int)gameManager.levelSelector;
         LoadScene(chosenLevel);
         mainOptionsMenuUI.SetActive(false);
         levelSelectMenuUI.SetActive(false);
+        SetSelectedButton(mainMenuFirstButton);
 
         Debug.Log("Selected Level is" + chosenLevel); // TODO: Remove
     }
 
-    public void TitleMenu() {
+    public void TitleMenu()
+    {
         mainMenuTitleScreenUI.SetActive(true);
         mainOptionsMenuUI.SetActive(false);
+        SetSelectedButton(mainMenuFirstButton);
+
     }
 
-    public void PlayerCountMenu() {
+    public void PlayerCountMenu()
+    {
         playerCountMenuUI.SetActive(true);
         mainMenuTitleScreenUI.SetActive(false);
         mainOptionsMenuUI.SetActive(false);
+        SetSelectedButton(playerCountFirstButton);
     }
 
-    public void PlayerCountBackButton() {
+    public void PlayerCountBackButton()
+    {
         playerCountMenuUI.SetActive(false);
         mainMenuTitleScreenUI.SetActive(true);
+        SetSelectedButton(mainMenuFirstButton);
     }
 
-    public void CharacterSelectMenu() {
+    public void CharacterSelectMenu()
+    {
         characterSelectMenuUI.SetActive(true);
         playerCountMenuUI.SetActive(false);
+        SetSelectedButton(characterSelectFirstButton);
     }
 
     public void CharacterSelectBackButton()
     {
         playerCountMenuUI.SetActive(true);
         characterSelectMenuUI.SetActive(false);
+        SetSelectedButton(mainMenuFirstButton);
     }
 
     public void LevelSelectMenu()
     {
         levelSelectMenuUI.SetActive(true);
         characterSelectMenuUI.SetActive(false);
+        SetSelectedButton(levelSelectFirstButton);
 
         Debug.Log("Choose a level (Haunted Woods, Stormy Mountains, Living in a Ghost Town (Cove) or Abandond Base"); // TODO: Remove
     }
@@ -99,23 +124,28 @@ public class MainMenu : MonoBehaviour
     {
         levelSelectMenuUI.SetActive(false);
         characterSelectMenuUI.SetActive(true);
+        SetSelectedButton(mainMenuFirstButton);
     }
 
-    public void OptionsMenu() {
+    public void OptionsMenu()
+    {
         mainMenuTitleScreenUI.SetActive(false);
         mainOptionsMenuUI.SetActive(true);
+        SetSelectedButton(optionsMenuFirstButton);
     }
 
     public void AudioMenu()
     {
         mainOptionsMenuUI.SetActive(false);
         audioMenuUI.SetActive(true);
+        SetSelectedButton(audioMenuFirstButton);
     }
 
     public void AudioMenuBackButton()
     {
         mainOptionsMenuUI.SetActive(true);
         audioMenuUI.SetActive(false);
+        SetSelectedButton(optionsMenuFirstButton);
     }
 
     public void ControlsMenu()
@@ -123,6 +153,7 @@ public class MainMenu : MonoBehaviour
         mainOptionsMenuUI.SetActive(false);
         controlsMenuUI.SetActive(true);
         audioMenuUI.SetActive(false);
+        SetSelectedButton(controlsMenuFirstButton);
     }
 
     public void ControlsMenuBackButton()
@@ -130,10 +161,18 @@ public class MainMenu : MonoBehaviour
         mainOptionsMenuUI.SetActive(true);
         controlsMenuUI.SetActive(false);
         audioMenuUI.SetActive(false);
+        SetSelectedButton(optionsMenuFirstButton);
     }
 
-    public void QuitGame() {
+    public void QuitGame()
+    {
         Application.Quit();
         Debug.Log("Quitting Game..."); // TODO: Remove
+    }
+
+    private void SetSelectedButton(GameObject button)
+    {
+        EventSystem.current.SetSelectedGameObject(null); // clear previous
+        EventSystem.current.SetSelectedGameObject(button);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
@@ -11,26 +12,32 @@ public class WeaponSwitcher : MonoBehaviour
     [SerializeField] RigBuilder rigBuilder; // Reference to RigBuilder
 
     private AudioManager audioManager;
-    [Header("Animation")]
     private Animator weaponAnimator;
 
     private PlayerInput playerInput;
-    //private InputAction switchWeaponAction;
     private InputAction scrollAction;
+    private InputAction nextWeaponAction;
+    private InputAction previousWeaponAction;
 
     private List<Transform> validWeapons = new List<Transform>();
 
     private void Awake()
     {
         playerInput = GetComponentInParent<PlayerInput>();
+
+        // Existing scroll input
         scrollAction = playerInput.actions["ScrollWeapon"];
         scrollAction.performed += ScrollWeapon;
-        //switchWeaponAction = playerInput.actions["SwitchWeapon"];
+
+        // New inputs for Next/Previous weapon
+        nextWeaponAction = playerInput.actions["NextWeapon"];
+        previousWeaponAction = playerInput.actions["PreviousWeapon"];
+        nextWeaponAction.performed += HandleNextWeapon;
+        previousWeaponAction.performed += HandlePreviousWeapon;
+
         audioManager = FindObjectOfType<AudioManager>();
         weaponAnimator = GetComponent<Animator>();
     }
-
-
 
     void Start()
     {
@@ -39,90 +46,84 @@ public class WeaponSwitcher : MonoBehaviour
             if (!weapon.name.StartsWith("ref_"))
                 validWeapons.Add(weapon);
         }
-        //SetWeaponActive();
+
+        StartCoroutine(InitializeWeapons());
     }
 
-    void Update()
+    private IEnumerator InitializeWeapons()
     {
-
-        //int previousWeapon = currentWeapon;
-
-        ////ProcessKeyInput();
-        ////ProcessScrollWheel();
-
-        //if (previousWeapon != currentWeapon)
-        //{
-        //    SetWeaponActive();
-        //}
+        yield return null;
+        SetWeaponActive();
     }
 
     private void OnEnable()
     {
         scrollAction.Enable();
-        //switchWeaponAction?.Enable();
+        nextWeaponAction.Enable();
+        previousWeaponAction.Enable();
     }
 
     private void OnDisable()
     {
         scrollAction.performed -= ScrollWeapon;
+        nextWeaponAction.performed -= HandleNextWeapon;
+        previousWeaponAction.performed -= HandlePreviousWeapon;
+
         scrollAction.Disable();
-        //switchWeaponAction?.Disable();
+        nextWeaponAction.Disable();
+        previousWeaponAction.Disable();
     }
-
-    //private void ProcessScrollWheel()
-    //{
-    //    scrollTimer -= Time.deltaTime;
-    //    if (scrollTimer > 0f) return;
-
-    //    float scrollDelta = scrollAction.ReadValue<float>();
-    //    Debug.Log($"Scroll Delta: {scrollDelta}");
-
-    //    if (scrollDelta < -0.1f)
-    //    {
-    //        currentWeapon = (currentWeapon + 1) % GetValidWeaponCount();
-    //        scrollTimer = scrollCooldown;
-    //    }
-    //    else if (scrollDelta > 0.1f)
-    //    {
-    //        currentWeapon--;
-    //        if (currentWeapon < 0)
-    //        {
-    //            currentWeapon = GetValidWeaponCount() - 1;
-    //        }
-    //        scrollTimer = scrollCooldown;
-    //    }
-    //}
 
     private float scrollCooldown = 0.2f;
     private float scrollTimer = 0f;
 
     public void ScrollWeapon(InputAction.CallbackContext context)
     {
-        if (Time.time < scrollTimer) return; // throttle fast scrolls
+        if (Time.time < scrollTimer) return; // Throttle fast scrolls
         scrollTimer = Time.time + scrollCooldown;
 
         float scrollDelta = context.ReadValue<float>();
-        Debug.Log($"Scroll delta: {scrollDelta}");
 
         if (scrollDelta < -0.1f)
         {
-            currentWeapon = (currentWeapon + 1) % GetValidWeaponCount();
+            SelectNextWeapon();
         }
         else if (scrollDelta > 0.1f)
         {
-            currentWeapon--;
-            if (currentWeapon < 0)
-                currentWeapon = GetValidWeaponCount() - 1;
+            SelectPreviousWeapon();
         }
+    }
+
+    private void HandleNextWeapon(InputAction.CallbackContext context)
+    {
+        if (Time.time < scrollTimer) return; // Apply cooldown to avoid rapid switches
+        scrollTimer = Time.time + scrollCooldown;
+
+        SelectNextWeapon();
+    }
+
+    private void HandlePreviousWeapon(InputAction.CallbackContext context)
+    {
+        if (Time.time < scrollTimer) return; // Apply cooldown to avoid rapid switches
+        scrollTimer = Time.time + scrollCooldown;
+
+        SelectPreviousWeapon();
+    }
+
+    private void SelectNextWeapon()
+    {
+        currentWeapon = (currentWeapon + 1) % GetValidWeaponCount();
+        SetWeaponActive();
+    }
+
+    private void SelectPreviousWeapon()
+    {
+        currentWeapon--;
+        if (currentWeapon < 0)
+            currentWeapon = GetValidWeaponCount() - 1;
 
         SetWeaponActive();
     }
-    //private void ProcessKeyInput()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Alpha1)) currentWeapon = 0;
-    //    if (Input.GetKeyDown(KeyCode.Alpha2)) currentWeapon = 1;
-    //    if (Input.GetKeyDown(KeyCode.Alpha3)) currentWeapon = 2;
-    //}
 
     private int GetValidWeaponCount()
     {
@@ -133,12 +134,24 @@ public class WeaponSwitcher : MonoBehaviour
     {
         for (int i = 0; i < validWeapons.Count; i++)
         {
-            
             var weapon = validWeapons[i];
-            if (i == currentWeapon)
+            var weaponZoom = weapon.GetComponent<WeaponZoom>();
+
+            bool isActive = (i == currentWeapon);
+
+            if (isActive)
             {
                 weapon.gameObject.SetActive(true);
-                Debug.Log("Weapon active: " + weapon.name);
+                if (weaponZoom != null)
+                {
+                    weaponZoom.enabled = true;
+
+                    if (weaponZoom.zoomedInUIImage != null && weaponZoom.zoomedInUISprite != null)
+                    {
+                        weaponZoom.zoomedInUIImage.sprite = weaponZoom.zoomedInUISprite;
+                    }
+                }
+
                 PlayDrawWeaponAnim();
                 PlayDrawSound();
 
@@ -150,6 +163,7 @@ public class WeaponSwitcher : MonoBehaviour
             }
             else
             {
+                if (weaponZoom != null) weaponZoom.enabled = false;
                 weapon.gameObject.SetActive(false);
             }
         }
@@ -175,7 +189,5 @@ public class WeaponSwitcher : MonoBehaviour
     {
         armIK.data.target = newTarget;
         rigBuilder.Build();
-
-        //Debug.Log("IK target updated to: " + newTarget.name);
     }
 }

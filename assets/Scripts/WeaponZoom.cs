@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 using UnityEngine.UI;
@@ -13,102 +12,99 @@ public class WeaponZoom : MonoBehaviour
     [SerializeField] float zoomedInFOV = 20f;
 
     [Header("Zoom Visuals")]
-    [SerializeField] Canvas zoomedInUICanvas; // canvas to toggle on and off
-    [SerializeField] Image zoomedInUIImage;   // image for the current weapon
-    [SerializeField] Sprite zoomedInUISprite;
+    [SerializeField] Canvas zoomedInUICanvas;
+    public Image zoomedInUIImage;
+    public Sprite zoomedInUISprite;
     [Range(0, 1)] public float zoomedInTransparency = 0.5f;
-
-    bool zoomedInToggle = false;
 
     private PlayerInput playerInput;
     private InputAction zoomAction;
+
+    private bool isSubscribed = false;
 
     private void Awake()
     {
         playerInput = GetComponentInParent<PlayerInput>();
         zoomAction = playerInput.actions["Zoom"];
+
+        zoomAction.Enable();
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        ToggleZoomedInUI();
+        ZoomOut();
+        SubscribeInput();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeInput();
+        ZoomOut();
+    }
+
+    private void SubscribeInput()
+    {
+        if (!isSubscribed && zoomAction != null)
+        {
+            zoomAction.performed += OnZoomPressed;
+            zoomAction.canceled += OnZoomPressed;
+            isSubscribed = true;
+        }
+    }
+
+    private void UnsubscribeInput()
+    {
+        if (isSubscribed && zoomAction != null)
+        {
+            zoomAction.performed -= OnZoomPressed;
+            zoomAction.canceled -= OnZoomPressed;
+            isSubscribed = false;
+        }
     }
 
     private void Update()
     {
-        // Update UI transparency
-        Color zoomedImageColor = zoomedInUIImage.color;
-        zoomedImageColor.a = zoomedInTransparency;
-        zoomedInUIImage.color = zoomedImageColor;
+        if (zoomedInUICanvas != null && zoomedInUIImage != null)
+        {
+            Color color = zoomedInUIImage.color;
+            color.a = zoomedInTransparency;
+            zoomedInUIImage.color = color;
+        }
     }
 
     public void OnZoomPressed(InputAction.CallbackContext context)
     {
-        FindObjectOfType<AudioManager>().Play("WeaponZoomSfx");
 
-        if (zoomedInToggle == false)
+        if (context.started)
         {
+            FindObjectOfType<AudioManager>().Play("WeaponZoomSfx");
             ZoomIn();
         }
-        else
+        else if (context.canceled)
         {
             ZoomOut();
         }
     }
 
-    private void OnEnable()
+    private void ZoomIn()
     {
-        zoomAction.performed += OnZoomPressed;
-        zoomAction.Enable();
-    }
-
-    private void OnDisable()
-    {
-        ZoomOut(); // Always reset zoom state on disable
-        zoomAction.performed -= OnZoomPressed;
-        zoomAction.Disable();
-    }
-
-    public void ZoomOut()
-    {
-        zoomedInToggle = false;
-        fpsCamera.fieldOfView = zoomedOutFOV;
-
-        // Reset sensitivity to normal
-        fpsController.mouseLook.ResetSensitivity();
-
-        ToggleZoomedInUI();
-    }
-
-    public void ZoomIn()
-    {
-        zoomedInToggle = true;
         fpsCamera.fieldOfView = zoomedInFOV;
-
-        // Switch to zoom sensitivity
         fpsController.mouseLook.SetZoomSensitivity();
 
-        ToggleZoomedInUI();
+        if (zoomedInUICanvas != null)
+        {
+            zoomedInUICanvas.enabled = true;
+        }
     }
 
-    private void SetZoomedInUIImage()
+    private void ZoomOut()
     {
-        zoomedInUIImage.GetComponent<Image>().sprite = zoomedInUISprite;
-    }
+        fpsCamera.fieldOfView = zoomedOutFOV;
+        fpsController.mouseLook.ResetSensitivity();
 
-    private void ToggleZoomedInUI()
-    {
-        if (zoomedInUICanvas == null)
-            return;
-
-        if (!zoomedInToggle)
+        if (zoomedInUICanvas != null)
         {
             zoomedInUICanvas.enabled = false;
-        }
-        else
-        {
-            SetZoomedInUIImage();
-            zoomedInUICanvas.enabled = true;
         }
     }
 }

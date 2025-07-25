@@ -18,7 +18,7 @@ public class Weapon : MonoBehaviour
     Transform cam;
     ImpactElementHandler ImpactElementHandler;
     private Animator weaponAnimator;
-    
+
     // impact references end
     [Header("Weapon Stats Config")]
     [SerializeField] String weaponName;
@@ -211,23 +211,22 @@ public class Weapon : MonoBehaviour
 
     public void OnFirePressed()
     {
+        if (!canShoot) return;
+
         if (fireMode == FireMode.Single || fireMode == FireMode.Shotgun)
         {
             StartCoroutine(Shoot());
         }
-        else if (fireMode == FireMode.Continuous || fireMode == FireMode.Minigun)
+        else if (fireMode == FireMode.Continuous)
         {
             isShooting = true;
-
-            if (fireMode == FireMode.Minigun)
-            {
-                weaponAnimator.Play("AN_StartShoot");
-                StartCoroutine(WaitForStartShootAnimation());
-            }
-            else
-            {
-                StartCoroutine(ShootContinuously());
-            }
+            StartCoroutine(ShootContinuously());
+        }
+        else if (fireMode == FireMode.Minigun)
+        {
+            isShooting = true;
+            weaponAnimator.Play("AN_StartShoot");
+            StartCoroutine(WaitForStartShootAnimation());
         }
     }
 
@@ -237,11 +236,14 @@ public class Weapon : MonoBehaviour
         {
             isShooting = false;
         }
-        else if (fireMode == FireMode.Minigun && isShooting)
+        else if (fireMode == FireMode.Minigun)
         {
-            isShooting = false;
-            weaponAnimator.Play("AN_EndShoot");
-            StartCoroutine(WaitForEndShootAnimation());
+            if (isShooting)
+            {
+                isShooting = false;
+                weaponAnimator.Play("AN_EndShoot");
+                StartCoroutine(WaitForEndShootAnimation());
+            }
         }
     }
 
@@ -283,12 +285,10 @@ public class Weapon : MonoBehaviour
     IEnumerator WaitForStartShootAnimation()
     {
         float animLength = weaponAnimator.GetCurrentAnimatorStateInfo(0).length;
-        //Debug.Log("AN_StartShoot length: " + animLength);
-        // Wait until the "AN_StartShoot" animation has finished
         yield return new WaitForSeconds(animLength);
 
-        minigunCanStartShooting = true;
-        //Debug.Log("AN_StartShoot completed, minigunCanStartShooting = " + minigunCanStartShooting);
+        // Animation finished, start the continuous shooting coroutine now
+        StartCoroutine(ShootContinuously());
     }
 
     IEnumerator WaitForEndShootAnimation()
@@ -297,7 +297,7 @@ public class Weapon : MonoBehaviour
         //Debug.Log("AN_EndShoot length: " + animLength);
         // Wait until the "AN_EndShoot" animation has finished
         yield return new WaitForSeconds(weaponAnimator.GetCurrentAnimatorStateInfo(0).length);
-        
+
         // After the barrel slows down, switch to idle
         SetIdleAnimation();
     }
@@ -307,12 +307,23 @@ public class Weapon : MonoBehaviour
     {
         while (isShooting && currentClipAmmo > 0)
         {
+            if (!canShoot)
+            {
+                yield return null;  // Wait a frame and check again
+                continue;
+            }
+
+            canShoot = false;
+
             PlayPistolSFX();
             PlayImpactSfx();
             ProcessRaycast();
             currentClipAmmo--;
             shakeOnShoot();
+
             yield return new WaitForSeconds(timeBetweenShots);
+
+            canShoot = true;
         }
 
         isShooting = false;
@@ -485,7 +496,8 @@ public class Weapon : MonoBehaviour
         }
         else
         {
-            if (weaponClipEmptySfx != null) {
+            if (weaponClipEmptySfx != null)
+            {
                 pistolSfx.PlayOneShot(weaponClipEmptySfx);
             }
             Debug.Log($"No ammo left to reload!");
@@ -666,7 +678,7 @@ public class Weapon : MonoBehaviour
                     EnemyHealth headTarget = hit.transform.GetComponentInParent<EnemyHealth>();
 
                     if (headTarget != null)
-                    { 
+                    {
                         headTarget.TakeDamage(damage * 2); // Double damage for headshots
                     }
 
@@ -718,7 +730,8 @@ public class Weapon : MonoBehaviour
                 // BLOOD END ********************************************************************
                 target.TakeDamage(damage); // TODO: player takes damage
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 // Handle error here
                 Debug.Log("Error: " + e.Message);
             }
